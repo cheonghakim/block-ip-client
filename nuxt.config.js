@@ -28,7 +28,10 @@ export default {
   css: ['~/assets/css/custom.css'],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [{ src: '~/plugins/notifications.ts', mode: 'client' }],
+  plugins: [
+    { src: '~/plugins/notifications.ts', mode: 'client' },
+    { src: '~/plugins/eventBus.ts', mode: 'client' },
+  ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,

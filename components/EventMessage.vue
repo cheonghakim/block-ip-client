@@ -1,5 +1,6 @@
 <script>
-import { ref, getCurrentInstance, onBeforeUnmount } from 'vue'
+import Vue from 'vue'
+import { ref, onBeforeUnmount, onMounted } from '@nuxtjs/composition-api'
 import { Subject } from 'rxjs'
 import { debounceTime } from 'rxjs/operators'
 import Utils from '@/static/utils'
@@ -15,7 +16,7 @@ export default {
     msg$.pipe(debounceTime(300)).subscribe(() => {
       const set = new Set(msgList.value)
       for (const message of set) {
-        proxy.$notify({
+        Vue.prototype.$notify({
           group: 'eventMessage',
           title: '시스템 메세지',
           duration: 10000,
@@ -31,7 +32,7 @@ export default {
     error$.pipe(debounceTime(300)).subscribe(() => {
       const set = new Set(errorList.value?.message)
       for (const message of set) {
-        proxy.$notify({
+        Vue.prototype.$notify({
           group: 'eventMessage',
           title: '에러 메세지',
           duration: 10000,
@@ -49,7 +50,7 @@ export default {
     success$.pipe(debounceTime(300)).subscribe(() => {
       const set = new Set(successList.value)
       for (const message of set) {
-        proxy.$notify({
+        Vue.prototype.$notify({
           group: 'eventMessage',
           title: '성공 메세지',
           duration: 10000,
@@ -64,7 +65,7 @@ export default {
     warning$.pipe(debounceTime(300)).subscribe(() => {
       const set = new Set(warningList.value)
       for (const message of set) {
-        proxy.$notify({
+        Vue.prototype.$notify({
           group: 'eventMessage',
           title: '경고 메세지',
           duration: 10000,
@@ -82,7 +83,6 @@ export default {
     const warningList = ref([])
 
     // 메세지 이벤트 정의
-    const { proxy } = getCurrentInstance()
     const messageCallback = (message) => {
       if (Utils.isEmpty(message)) return
       msgList.value.push(message)
@@ -95,6 +95,7 @@ export default {
     }
     const successCallback = (message) => {
       if (Utils.isEmpty(message)) return
+
       successList.value.push(message)
       success$.next()
     }
@@ -104,11 +105,13 @@ export default {
       warning$.next()
     }
 
-    // 이벤트 리스너 등록록
-    proxy.$subject.$on('info', messageCallback)
-    proxy.$subject.$on('error', errorCallback)
-    proxy.$subject.$on('success', successCallback)
-    proxy.$subject.$on('warning', warningCallback)
+    onMounted(() => {
+      // 이벤트 리스너 등록
+      Vue.prototype.$subject.$on('info', messageCallback)
+      Vue.prototype.$subject.$on('error', errorCallback)
+      Vue.prototype.$subject.$on('success', successCallback)
+      Vue.prototype.$subject.$on('warning', warningCallback)
+    })
 
     // 마운트 해제시 이벤트 리스너 해제
     onBeforeUnmount(() => {
@@ -117,10 +120,10 @@ export default {
       success$?.unsubscribe()
       warning$?.unsubscribe()
 
-      proxy.$subject.$off('info', messageCallback)
-      proxy.$subject.$off('error', errorCallback)
-      proxy.$subject.$off('success', successCallback)
-      proxy.$subject.$off('warning', warningCallback)
+      Vue.prototype.$subject.$off('info', messageCallback)
+      Vue.prototype.$subject.$off('error', errorCallback)
+      Vue.prototype.$subject.$off('success', successCallback)
+      Vue.prototype.$subject.$off('warning', warningCallback)
     })
 
     return {
@@ -135,49 +138,57 @@ export default {
 </script>
 
 <template>
-  <notifications :group="'eventMessage'" :position="'top center'">
-    <template slot="body" slot-scope="{ item, close }">
-      <div
-        class="event-message-custom"
-        :class="{
-          success: item.data.variant === 'success',
-          danger: item.data.variant === 'danger',
-          warning: item.data.variant === 'warning',
-          info: item.data.variant === 'info',
-        }"
-      >
-        <div class="">
-          <header
-            class="toast-header toast-custom-header"
-            :class="{
-              success: item.data.variant === 'success',
-              danger: item.data.variant === 'danger',
-              warning: item.data.variant === 'warning',
-              info: item.data.variant === 'info',
-            }"
-          >
-            <div class="d-flex flex-grow-1 align-items-baseline">
-              <strong class="mr-auto">
-                {{ item.title }}
-              </strong>
-            </div>
-            <button
-              type="button"
-              aria-label="Close"
-              class="close ml-auto font-size-20"
-              style="border: transparent; background: transparent; margin: 0px"
-              @click="close"
+  <client-only>
+    <notifications :group="'eventMessage'" :position="'top center'">
+      <template slot="body" slot-scope="{ item, close }">
+        <div
+          class="event-message-custom"
+          :class="{
+            success: item.data.variant === 'success',
+            danger: item.data.variant === 'danger',
+            warning: item.data.variant === 'warning',
+            info: item.data.variant === 'info',
+          }"
+        >
+          <div class="">
+            <header
+              class="toast-header toast-custom-header"
+              :class="{
+                success: item.data.variant === 'success',
+                danger: item.data.variant === 'danger',
+                warning: item.data.variant === 'warning',
+                info: item.data.variant === 'info',
+              }"
             >
-              ×
-            </button>
-          </header>
-          <div class="toast-body toast-custom-body">
-            <div v-html="sanitizeHTML(item.text)" class="vhtml" />
+              <div class="d-flex flex-grow-1 align-items-baseline">
+                <strong class="mr-auto">
+                  {{ item.title }}
+                </strong>
+              </div>
+              <button
+                type="button"
+                aria-label="Close"
+                class="close ml-auto"
+                style="
+                  border: transparent;
+                  background: transparent;
+                  margin: 0px;
+                  font-size: 20px;
+                "
+                @click="close"
+              >
+                ×
+              </button>
+            </header>
+            <div class="toast-body toast-custom-body">
+              <!-- <div class="vhtml" v-html="sanitizeHTML(item.text)" /> -->
+              {{ item.text }}
+            </div>
           </div>
         </div>
-      </div>
-    </template>
-  </notifications>
+      </template>
+    </notifications>
+  </client-only>
 </template>
 
 <style lang="scss">

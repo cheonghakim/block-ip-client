@@ -1,9 +1,10 @@
 <script lang="ts">
 import Vue from 'vue'
 import MainHeader from '~/components/MainHeader.vue'
+import MainFooter from '~/components/MainFooter.vue'
 
 export default Vue.extend({
-  components: { MainHeader },
+  components: { MainHeader, MainFooter },
   name: 'MainLayout',
 })
 </script>
@@ -17,6 +18,8 @@ export default Vue.extend({
         <slot />
       </div>
     </div>
+    <MainFooter />
+    <EventMessage />
   </section>
 </template>
 
