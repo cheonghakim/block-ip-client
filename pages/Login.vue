@@ -6,7 +6,6 @@ import Utils from '@/static/utils'
 
 export default Vue.extend({
   name: 'LoginPage',
-  middleware: ['userAuth'],
   setup() {
     const router = useRouter()
     const userId: Ref<string> = ref('')
@@ -46,11 +45,16 @@ export default Vue.extend({
       return true
     }
 
+    const routeToSignup = () => {
+      router.push('/signup')
+    }
+
     return {
       userId,
       password,
       login,
       checkValidations,
+      routeToSignup,
     }
   },
 })
@@ -73,7 +77,14 @@ export default Vue.extend({
           placeholder="패스워드"
           class="form-control"
         />
-        <button class="btn btn-success w-lg" @click="login">로그인</button>
+
+        <div class="p-2">
+          <button class="btn btn-primary w-lg" @click="routeToSignup">
+            회원가입
+          </button>
+
+          <button class="btn btn-success w-lg" @click="login">로그인</button>
+        </div>
       </div>
     </div>
   </section>

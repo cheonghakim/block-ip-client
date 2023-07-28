@@ -15,12 +15,8 @@ export default {
   },
 
   router: {
-    middleware: ['auth', 'userAuth'],
+    middleware: ['auth'],
     routes: [
-      {
-        path: '/',
-        component: '~/pages/Login.vue',
-      },
       {
         path: '/main',
         component: '~/pages/user/Main.vue',
@@ -32,7 +28,7 @@ export default {
   css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
+  plugins: [{ src: '~/plugins/notifications.ts', mode: 'client' }],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,

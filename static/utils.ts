@@ -1,3 +1,5 @@
+import * as DOMPurify from 'dompurify'
+
 export default class Utils {
   /**
    * http get 쿼리 스트링 생성
@@ -47,5 +49,9 @@ export default class Utils {
     )
       return true
     return false
+  }
+
+  static sanitizeHTML(html: string) {
+    return DOMPurify.sanitize(html)
   }
 }

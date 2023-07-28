@@ -6,7 +6,6 @@ import Utils from '@/static/utils'
 
 export default Vue.extend({
   name: 'LoginPage',
-  middleware: ['userAuth'],
   setup() {
     const router = useRouter()
     const userId: Ref<string> = ref('')
@@ -26,7 +25,7 @@ export default Vue.extend({
         if (data && data.success) {
           // login(loginData)
           alert('성공!')
-          router.push('/user/main')
+          router.push('/login')
         } else {
           console.error(data.message)
         }
@@ -107,7 +106,12 @@ export default Vue.extend({
           placeholder="이메일"
           class="form-control"
         />
-        <button class="btn btn-success w-lg" @click="signup">회원가입</button>
+
+        <div class="p-2">
+          <button class="btn btn-success w-lg" @click="signup">
+            회원가입 신청
+          </button>
+        </div>
       </div>
     </div>
   </section>
