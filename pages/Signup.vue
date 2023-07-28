@@ -32,7 +32,7 @@ export default Vue.extend({
         }
         const { data } = await SignupAPI.v1.signup(signupData)
         if (data && data.success) {
-          Vue.prototype.$subject.$emit('success', '성공')
+          Vue.prototype.$subject.$emit('success', '회원가입 되었습니다.')
           router.push('/login')
         } else {
           Vue.prototype.$subject.$emit('warning', data.message)
@@ -66,7 +66,7 @@ export default Vue.extend({
       if (!passwordPattern.test(password.value)) {
         Vue.prototype.$subject.$emit(
           'warning',
-          '패스워드 형식은 영문/숫자 4~16자리여야 합니다.'
+          '패스워드 형식은 영문/숫자/특수기호를 포함한 4~16자리여야 합니다.'
         )
         return false
       }
@@ -79,7 +79,7 @@ export default Vue.extend({
       if (!passwordPattern.test(passwordCheck.value)) {
         Vue.prototype.$subject.$emit(
           'warning',
-          '패스워드 형식은 영문/숫자 4~16자리여야 합니다.'
+          '패스워드 형식은 영문/숫자/특수기호를 포함한 4~16자리여야 합니다.'
         )
         return false
       }
@@ -248,6 +248,7 @@ export default Vue.extend({
                     (Utils.isEmpty(email) ||
                       !wholeEmailPattern.test(email.value)),
                 }"
+                @keypress.enter="signup"
               />
 
               <div class="mt-1 text-secondary" style="padding-left: 0.5rem">

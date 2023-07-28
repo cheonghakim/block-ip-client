@@ -8,7 +8,7 @@ export default Vue.extend({
 
 <template>
   <section class="header-wrapper">
-    <b-navbar toggleable="lg" type="dark" variant="info">
+    <b-navbar toggleable="lg" type="dark">
       <b-navbar-brand href="#">IP Blocker</b-navbar-brand>
     </b-navbar>
   </section>
@@ -18,7 +18,7 @@ export default Vue.extend({
 .header-wrapper {
   height: 50px;
   width: 100%;
-  background: #8fcaca;
+  background: #779fa5;
   position: fixed;
   z-index: 1000;
 }

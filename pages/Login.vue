@@ -26,7 +26,6 @@ export default Vue.extend({
         }
         const { data } = await LoginAPI.v1.login(loginData)
         if (data && data.success) {
-          Vue.prototype.$subject.$emit('success', '성공')
           router.push('/user/main')
         } else {
           Vue.prototype.$subject.$emit('warning', data.message)
@@ -61,7 +60,7 @@ export default Vue.extend({
       if (!passwordPattern.test(password.value)) {
         Vue.prototype.$subject.$emit(
           'warning',
-          '패스워드 형식은 영문/숫자 4~16자리여야 합니다.'
+          '패스워드 형식은 영문/숫자/특수기호를 포함한 4~16자리여야 합니다.'
         )
         return false
       }
@@ -163,8 +162,8 @@ export default Vue.extend({
                     !passwordPattern.test(password.value))
                 "
                 @updatePassword="updatePassword"
-                @keypress.enter="login"
-                @keydown="checkCapsLock"
+                @onEnter="login"
+                @onKeydown="checkCapsLock"
               />
             </div>
           </div>
