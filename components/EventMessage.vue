@@ -194,27 +194,33 @@ export default {
 <style lang="scss">
 .vue-notification-group {
   z-index: 9999 !important;
+  width: 100% !important;
 }
 .event-message-custom {
   width: 400px;
   margin: 0.5rem;
   border-radius: 5px;
-  color: #856404;
+
   .toast-custom-header {
     padding: 0.5rem;
     border-top-left-radius: 0.3rem;
     border-top-right-radius: 0.3rem;
+
     &.success {
       background: #ade5d1;
+      color: #3e846b;
     }
     &.warning {
       background: #fbd499;
+      color: #856404;
     }
     &.danger {
       background: #fac1c1;
+      color: #bd5252;
     }
     &.info {
       background: #b0d9fc;
+      color: #427aab;
     }
   }
   .toast-custom-body {
@@ -225,15 +231,19 @@ export default {
 
   &.success {
     background: #ccf0e3;
+    color: #3e846b;
   }
   &.warning {
     background: #fce0b5;
+    color: #856404;
   }
   &.danger {
     background: #fde1e1;
+    color: #bd5252;
   }
   &.info {
     background: #c6e4ff;
+    color: #427aab;
   }
 }
 </style>

@@ -4,6 +4,7 @@ import { useRouter } from '@nuxtjs/composition-api'
 import SignupAPI from '../api/app/SignupAPI'
 import Utils from '@/static/utils'
 import MainLayoutVue from '~/components/MainLayout.vue'
+import PasswordForm from '~/components/PasswordForm.vue'
 import {
   passwordPattern,
   userIdPattern,
@@ -11,8 +12,8 @@ import {
 } from '@/static/regex'
 
 export default Vue.extend({
-  components: { MainLayoutVue },
   name: 'LoginPage',
+  components: { MainLayoutVue, PasswordForm },
   setup() {
     const router = useRouter()
     const userId: Ref<string> = ref('')
@@ -61,7 +62,7 @@ export default Vue.extend({
         Vue.prototype.$subject.$emit('warning', '패스워드를 입력하세요.')
         return false
       }
-
+      console.log(password.value)
       if (!passwordPattern.test(password.value)) {
         Vue.prototype.$subject.$emit(
           'warning',
@@ -106,19 +107,29 @@ export default Vue.extend({
       router.push('/login')
     }
 
+    const updatePassword = (data: string) => {
+      password.value = data
+    }
+
+    const updatePasswordCheck = (data: string) => {
+      passwordCheck.value = data
+    }
+
     return {
       userId,
       password,
       passwordCheck,
       email,
       submitted,
+      userIdPattern,
+      passwordPattern,
+      wholeEmailPattern,
       Utils,
       signup,
       checkValidations,
       routeGoBack,
-      userIdPattern,
-      passwordPattern,
-      wholeEmailPattern,
+      updatePassword,
+      updatePasswordCheck,
     }
   },
 })
@@ -127,12 +138,12 @@ export default Vue.extend({
 <template>
   <MainLayoutVue>
     <section class="d-flex justify-content-center align-items-center mt-4">
-      <div class="card col-3">
+      <div class="card col-10 col-xxl-3 col-xl-3 col-md-6 col-lg-5 col-sm-8">
         <div class="card-body">
           <h4 class="card-title">회원가입</h4>
 
           <div class="form-group row mb-2 d-flex justify-content-center">
-            <div class="col-12 col-xl-4 col-xxl-4 col-lg-4 col-md-5">
+            <div class="col-12">
               <label
                 for="projectname"
                 class="col-form-label col-12 d-flex align-items-center p-0 pb-2"
@@ -161,7 +172,7 @@ export default Vue.extend({
           </div>
 
           <div class="form-group row mb-2 d-flex justify-content-center">
-            <div class="col-12 col-xl-4 col-xxl-4 col-lg-4 col-md-5">
+            <div class="col-12">
               <label
                 for="projectname"
                 class="col-form-label col-12 d-flex align-items-center p-0 pb-2"
@@ -169,28 +180,27 @@ export default Vue.extend({
                 패스워드
               </label>
 
-              <input
-                v-model="password"
-                type="password"
-                placeholder="패스워드"
-                class="form-control mb-2"
-                maxlength="20"
-                :class="{
-                  'is-invalid':
-                    submitted &&
-                    (Utils.isEmpty(password) ||
-                      !passwordPattern.test(password.value)),
-                }"
+              <PasswordForm
+                class="mb-2"
+                :init-data="password"
+                :maxlength="'20'"
+                :placeholder="'패스워드'"
+                :is-invalid="
+                  submitted &&
+                  (Utils.isEmpty(password) ||
+                    !passwordPattern.test(password.value))
+                "
+                @updatePassword="updatePassword"
               />
 
               <div class="mt-1 text-secondary" style="padding-left: 0.5rem">
-                ex) pw123
+                ex) password123
               </div>
             </div>
           </div>
 
           <div class="form-group row mb-2 d-flex justify-content-center">
-            <div class="col-12 col-xl-4 col-xxl-4 col-lg-4 col-md-5">
+            <div class="col-12">
               <label
                 for="projectname"
                 class="col-form-label col-12 d-flex align-items-center p-0 pb-2"
@@ -198,28 +208,27 @@ export default Vue.extend({
                 패스워드 확인
               </label>
 
-              <input
-                v-model="passwordCheck"
-                type="password"
-                placeholder="패스워드 확인"
-                class="form-control mb-2"
-                maxlength="20"
-                :class="{
-                  'is-invalid':
-                    submitted &&
-                    (Utils.isEmpty(passwordCheck) ||
-                      !passwordPattern.test(passwordCheck.value)),
-                }"
+              <PasswordForm
+                class="mb-2"
+                :init-data="passwordCheck"
+                :maxlength="'20'"
+                :placeholder="'패스워드 확인'"
+                :is-invalid="
+                  submitted &&
+                  (Utils.isEmpty(passwordCheck) ||
+                    !passwordPattern.test(passwordCheck.value))
+                "
+                @updatePassword="updatePasswordCheck"
               />
 
               <div class="mt-1 text-secondary" style="padding-left: 0.5rem">
-                ex) pw123
+                ex) password123
               </div>
             </div>
           </div>
 
           <div class="form-group row mb-2 d-flex justify-content-center">
-            <div class="col-12 col-xl-4 col-xxl-4 col-lg-4 col-md-5">
+            <div class="col-12">
               <label
                 for="projectname"
                 class="col-form-label col-12 d-flex align-items-center p-0 pb-2"

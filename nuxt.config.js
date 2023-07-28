@@ -31,6 +31,7 @@ export default {
   plugins: [
     { src: '~/plugins/notifications.ts', mode: 'client' },
     { src: '~/plugins/eventBus.ts', mode: 'client' },
+    { src: '~/plugins/mdi.ts', mode: 'client' },
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -52,7 +53,7 @@ export default {
   ],
 
   proxy: {
-    '/api': 'http://localhost:8080',
+    '/api': 'http://localhost:8088',
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build

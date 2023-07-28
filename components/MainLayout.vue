@@ -1,17 +1,37 @@
 <script lang="ts">
-import Vue from 'vue'
+import Vue, { onMounted, ref } from 'vue'
 import MainHeader from '~/components/MainHeader.vue'
 import MainFooter from '~/components/MainFooter.vue'
+import CommonHeaderVue from '~/components/CommonHeader.vue'
 
 export default Vue.extend({
-  components: { MainHeader, MainFooter },
   name: 'MainLayout',
+  components: { MainHeader, MainFooter, CommonHeaderVue },
+  setup() {
+    const isUser = ref(false)
+
+    const checkUser = async () => {
+      if (process.browser) {
+        const userCookie = await window.cookieStore.get('id')
+        isUser.value = !!userCookie
+      }
+    }
+
+    onMounted(async () => {
+      await checkUser()
+    })
+
+    return {
+      isUser,
+    }
+  },
 })
 </script>
 
 <template>
   <section class="layout-wrapper d-flex flex-column">
-    <MainHeader />
+    <MainHeader v-if="isUser" />
+    <CommonHeaderVue v-else />
 
     <div class="slot-wrapper">
       <div class="slot-attr">

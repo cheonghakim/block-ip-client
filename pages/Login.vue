@@ -4,11 +4,12 @@ import { useRouter } from '@nuxtjs/composition-api'
 import LoginAPI from '../api/app/LoginAPI'
 import Utils from '@/static/utils'
 import MainLayoutVue from '~/components/MainLayout.vue'
+import PasswordForm from '~/components/PasswordForm.vue'
 import { passwordPattern, userIdPattern } from '@/static/regex'
 
 export default Vue.extend({
   name: 'LoginPage',
-  components: { MainLayoutVue },
+  components: { MainLayoutVue, PasswordForm },
   setup() {
     const router = useRouter()
     const userId: Ref<string> = ref('')
@@ -79,6 +80,10 @@ export default Vue.extend({
       else isCapsLock.value = false
     }
 
+    const updatePassword = (data: string) => {
+      password.value = data
+    }
+
     return {
       userId,
       password,
@@ -90,6 +95,7 @@ export default Vue.extend({
       checkValidations,
       routeToSignup,
       checkCapsLock,
+      updatePassword,
       Utils,
     }
   },
@@ -99,7 +105,7 @@ export default Vue.extend({
 <template>
   <MainLayoutVue>
     <section class="d-flex justify-content-center align-items-center mt-4">
-      <div class="card col-3">
+      <div class="card col-10 col-xxl-3 col-xl-3 col-md-6 col-lg-5 col-sm-8">
         <div class="card-body">
           <h4 class="card-title">로그인</h4>
 
@@ -146,18 +152,17 @@ export default Vue.extend({
                 </div>
               </label>
 
-              <input
-                v-model="password"
-                type="password"
-                placeholder="패스워드"
-                class="form-control mb-2"
-                maxlength="20"
-                :class="{
-                  'is-invalid':
-                    submitted &&
-                    (Utils.isEmpty(password) ||
-                      !passwordPattern.test(password.value)),
-                }"
+              <PasswordForm
+                class="mb-2"
+                :init-data="password"
+                :maxlength="'20'"
+                :placeholder="'패스워드'"
+                :is-invalid="
+                  submitted &&
+                  (Utils.isEmpty(password) ||
+                    !passwordPattern.test(password.value))
+                "
+                @updatePassword="updatePassword"
                 @keypress.enter="login"
                 @keydown="checkCapsLock"
               />

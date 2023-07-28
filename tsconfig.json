@@ -15,10 +15,9 @@
       "~/*": ["./*"],
       "@/*": ["./*"]
     },
-    "types": ["@nuxt/types", "@types/node"],
     "noUnusedParameters": false,
     "noUnusedLocals": false,
-
+    "typeRoots": ["./node_modules/@types", "./custom-types"]
   },
   "exclude": ["node_modules", ".nuxt", "dist"]
 }
